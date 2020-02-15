@@ -1,8 +1,33 @@
 package nl.knokko.test;
 
-import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.opencl.CL10.CL_DEVICE_TYPE_GPU;
+import static org.lwjgl.opencl.CL10.CL_MEM_COPY_HOST_PTR;
+import static org.lwjgl.opencl.CL10.CL_MEM_READ_ONLY;
+import static org.lwjgl.opencl.CL10.CL_MEM_WRITE_ONLY;
+import static org.lwjgl.opencl.CL10.CL_PROGRAM_BUILD_LOG;
+import static org.lwjgl.opencl.CL10.CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE;
+import static org.lwjgl.opencl.CL10.CL_SUCCESS;
+import static org.lwjgl.opencl.CL10.clBuildProgram;
+import static org.lwjgl.opencl.CL10.clCreateBuffer;
+import static org.lwjgl.opencl.CL10.clCreateCommandQueue;
+import static org.lwjgl.opencl.CL10.clCreateContext;
+import static org.lwjgl.opencl.CL10.clCreateKernel;
+import static org.lwjgl.opencl.CL10.clCreateProgramWithSource;
+import static org.lwjgl.opencl.CL10.clEnqueueNDRangeKernel;
+import static org.lwjgl.opencl.CL10.clEnqueueReadBuffer;
+import static org.lwjgl.opencl.CL10.clEnqueueWriteBuffer;
+import static org.lwjgl.opencl.CL10.clFinish;
+import static org.lwjgl.opencl.CL10.clGetDeviceIDs;
+import static org.lwjgl.opencl.CL10.clGetPlatformIDs;
+import static org.lwjgl.opencl.CL10.clGetProgramBuildInfo;
+import static org.lwjgl.opencl.CL10.clReleaseCommandQueue;
+import static org.lwjgl.opencl.CL10.clReleaseContext;
+import static org.lwjgl.opencl.CL10.clReleaseKernel;
+import static org.lwjgl.opencl.CL10.clReleaseMemObject;
+import static org.lwjgl.opencl.CL10.clReleaseProgram;
+import static org.lwjgl.opencl.CL10.clSetKernelArg1p;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -11,7 +36,6 @@ import java.util.Scanner;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opencl.CL;
-import org.lwjgl.opencl.CL10;
 import org.lwjgl.opencl.CLContextCallbackI;
 import org.lwjgl.system.MemoryStack;
 
@@ -131,17 +155,6 @@ public class CLArrayAdd {
 	        clReleaseCommandQueue(queue);
 	        clReleaseContext(context);
 	        CL.destroy();
-		}
-	}
-	
-	public static void checkError(String action, IntBuffer errorCodeBuffer) {
-		checkCLError(action, errorCodeBuffer.get(0));
-	}
-	
-	public static void checkCLError(String action, int errorCode) {
-		if (errorCode != CL10.CL_SUCCESS) {
-			CL.destroy();
-			throw new RuntimeException("Get error code " + errorCode + " for action " + action);
 		}
 	}
 	
